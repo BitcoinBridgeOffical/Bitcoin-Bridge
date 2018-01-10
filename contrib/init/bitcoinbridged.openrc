@@ -1,0 +1,92 @@
+#!/sbin/runscript
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/bitcoinbridge/.bitcoinbridge" ]; then
+	BITCOINBRIDGED_DEFAULT_DATADIR="/var/lib/bitcoinbridge/.bitcoinbridge"
+else
+	BITCOINBRIDGED_DEFAULT_DATADIR="/var/lib/bitcoinbridged"
+fi
+
+BITCOINBRIDGED_CONFIGFILE=${BITCOINBRIDGED_CONFIGFILE:-/etc/bitcoinbridge/bitcoinbridge.conf}
+BITCOINBRIDGED_PIDDIR=${BITCOINBRIDGED_PIDDIR:-/var/run/bitcoinbridged}
+BITCOINBRIDGED_PIDFILE=${BITCOINBRIDGED_PIDFILE:-${BITCOINBRIDGED_PIDDIR}/bitcoinbridged.pid}
+BITCOINBRIDGED_DATADIR=${BITCOINBRIDGED_DATADIR:-${BITCOINBRIDGED_DEFAULT_DATADIR}}
+BITCOINBRIDGED_USER=${BITCOINBRIDGED_USER:-${BITCOINBRIDGE_USER:-bitcoinbridge}}
+BITCOINBRIDGED_GROUP=${BITCOINBRIDGED_GROUP:-bitcoinbridge}
+BITCOINBRIDGED_BIN=${BITCOINBRIDGED_BIN:-/usr/bin/bitcoinbridged}
+BITCOINBRIDGED_NICE=${BITCOINBRIDGED_NICE:-${NICELEVEL:-0}}
+BITCOINBRIDGED_OPTS="${BITCOINBRIDGED_OPTS:-${BITCOINBRIDGE_OPTS}}"
+
+name="BitcoinBridge Core Daemon"
+description="BitcoinBridge cryptocurrency P2P network daemon"
+
+command="/usr/bin/bitcoinbridged"
+command_args="-pid=\"${BITCOINBRIDGED_PIDFILE}\" \
+		-conf=\"${BITCOINBRIDGED_CONFIGFILE}\" \
+		-datadir=\"${BITCOINBRIDGED_DATADIR}\" \
+		-daemon \
+		${BITCOINBRIDGED_OPTS}"
+
+required_files="${BITCOINBRIDGED_CONFIGFILE}"
+start_stop_daemon_args="-u ${BITCOINBRIDGED_USER} \
+			-N ${BITCOINBRIDGED_NICE} -w 2000"
+pidfile="${BITCOINBRIDGED_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${BITCOINBRIDGED_SIGTERM_TIMEOUT}"
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${BITCOINBRIDGED_USER}:${BITCOINBRIDGED_GROUP}" \
+	"${BITCOINBRIDGED_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${BITCOINBRIDGED_USER}:${BITCOINBRIDGED_GROUP}" \
+	"${BITCOINBRIDGED_PIDDIR}"
+
+	checkpath -f \
+	-o ${BITCOINBRIDGED_USER}:${BITCOINBRIDGED_GROUP} \
+	-m 0660 \
+	${BITCOINBRIDGED_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${BITCOINBRIDGED_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run bitcoinbridged."
+		eerror "The setting must appear in ${BITCOINBRIDGED_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following"
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is also recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"BitcoinBridge Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}

@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+#  bitcoinbridged The bitcoinbridge core server.
+#
+#
+# chkconfig: 345 80 20
+# description: bitcoinbridged
+# processname: bitcoinbridged
+#
+
+# Source function library.
+. /etc/init.d/functions
+
+# you can override defaults in /etc/sysconfig/bitcoinbridged, see below
+if [ -f /etc/sysconfig/bitcoinbridged ]; then
+        . /etc/sysconfig/bitcoinbridged
+fi
+
+RETVAL=0
+
+prog=bitcoinbridged
+# you can override the lockfile via BITCOINBRIDGED_LOCKFILE in /etc/sysconfig/bitcoinbridged
+lockfile=${BITCOINBRIDGED_LOCKFILE-/var/lock/subsys/bitcoinbridged}
+
+# bitcoinbridged defaults to /usr/bin/bitcoinbridged, override with BITCOINBRIDGED_BIN
+bitcoinbridged=${BITCOINBRIDGED_BIN-/usr/bin/bitcoinbridged}
+
+# bitcoinbridged opts default to -disablewallet, override with BITCOINBRIDGED_OPTS
+bitcoinbridged_opts=${BITCOINBRIDGED_OPTS--disablewallet}
+
+start() {
+    echo -n $"Starting $prog: "
+    daemon $DAEMONOPTS $bitcoinbridged $bitcoinbridged_opts
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && touch $lockfile
+    return $RETVAL
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    killproc $prog
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && rm -f $lockfile
+    return $RETVAL
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status $prog
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: service $prog {start|stop|status|restart}"
+        exit 1
+        ;;
+esac

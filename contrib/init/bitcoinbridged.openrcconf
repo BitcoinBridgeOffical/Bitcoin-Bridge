@@ -1,0 +1,33 @@
+# /etc/conf.d/bitcoinbridged: config file for /etc/init.d/bitcoinbridged
+
+# Config file location
+#BITCOINBRIDGED_CONFIGFILE="/etc/bitcoinbridge/bitcoinbridge.conf"
+
+# What directory to write pidfile to?  (created and owned by $BITCOINBRIDGED_USER)
+#BITCOINBRIDGED_PIDDIR="/var/run/bitcoinbridged"
+
+# What filename to give the pidfile
+#BITCOINBRIDGED_PIDFILE="${BITCOINBRIDGED_PIDDIR}/bitcoinbridged.pid"
+
+# Where to write bitcoinbridged data (be mindful that the blockchain is large)
+#BITCOINBRIDGED_DATADIR="/var/lib/bitcoinbridged"
+
+# User and group to own bitcoinbridged process
+#BITCOINBRIDGED_USER="bitcoinbridge"
+#BITCOINBRIDGED_GROUP="bitcoinbridge"
+
+# Path to bitcoinbridged executable
+#BITCOINBRIDGED_BIN="/usr/bin/bitcoinbridged"
+
+# Nice value to run bitcoinbridged under
+#BITCOINBRIDGED_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#BITCOINBRIDGED_OPTS=""
+
+# The timeout in seconds OpenRC will wait for bitcoinbridged to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+BITCOINBRIDGED_SIGTERM_TIMEOUT=60

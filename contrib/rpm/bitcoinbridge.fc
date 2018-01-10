@@ -1,0 +1,8 @@
+/usr/bin/bitcoinbridge-cli		--	gen_context(system_u:object_r:bitcoinbridge_exec_t,s0)
+/usr/sbin/bitcoinbridged		--	gen_context(system_u:object_r:bitcoinbridge_exec_t,s0)
+/usr/lib(64)?/bitcoinbridge/bitcoinbridged		--	gen_context(system_u:object_r:bitcoinbridge_exec_t,s0)
+
+/etc/bitcoinbridge(/.*)?		gen_context(system_u:object_r:bitcoinbridge_conf_t,s0)
+/var/lib/bitcoinbridge(/.*)?		gen_context(system_u:object_r:bitcoinbridge_var_lib_t,s0)
+
+(/var)?/run/bitcoinbridged(/.*)?   gen_context(system_u:object_r:bitcoinbridge_var_run_t,s0)

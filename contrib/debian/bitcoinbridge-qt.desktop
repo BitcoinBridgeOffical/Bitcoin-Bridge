@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=BitcoinBridge Core
+Comment=Connect to the BitcoinBridge P2P Network
+Comment[de]=Verbinde mit dem BitcoinBridge peer-to-peer Netzwerk
+Comment[fr]=BitcoinBridge, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=BitcoinBridge, eşten eşe kriptografik sanal para birimi
+Exec=bitcoinbridge-qt %u
+Terminal=false
+Type=Application
+Icon=bitcoinbridge128
+MimeType=x-scheme-handler/bitcoinbridge;
+Categories=Office;Finance;
