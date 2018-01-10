@@ -3,7 +3,7 @@ BitcoinBridge Core integration/staging tree
 
 [![Build Status](https://travis-ci.org/bitcoinbridge/bitcoinbridge.svg?branch=master)](https://travis-ci.org/bitcoinbridge/bitcoinbridge)
 
-https://bitcoinbridgecore.org
+thebitcoinbridge.com
 
 What is BitcoinBridge?
 ----------------
@@ -28,7 +28,7 @@ Development Process
 -------------------
 
 The `master` branch is regularly built and tested, but is not guaranteed to be
-completely stable. [Tags](https://github.com/bitcoinbridge/bitcoinbridge/tags) are created
+completely stable. [Tags](https://github.com/BitcoinBridgeOffical/Bitcoin-Bridge/tags) are created
 regularly to indicate new official, stable release versions of BitcoinBridge Core.
 
 The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md).
