@@ -3,7 +3,7 @@ BitcoinBridge Core integration/staging tree
 
 [![Build Status](https://travis-ci.org/bitcoinbridge/bitcoinbridge.svg?branch=master)](https://travis-ci.org/bitcoinbridge/bitcoinbridge)
 
-thebitcoinbridge.com
+https://thebitcoinbridge.com
 
 What is BitcoinBridge?
 ----------------
